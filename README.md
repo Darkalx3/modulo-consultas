@@ -6,6 +6,8 @@ Ele é responsável pela coordenação entre **paciente**, **horário** e **esta
 
 O G4 consome os módulos **G1 (Pacientes)**, **G2 (Profissionais)** e **G3 (Agenda)** e fornece dados para os módulos **G5 (Prontuário)**, **G7 (Exames)**, **G10 (Faturamento)**, **G11 (Triagem)** e **G13 (Autorização)** via API REST.
 
+**Repositório:** `git@github.com:Darkalx3/modulo-consultas.git`
+
 ---
 
 ## Tecnologias
@@ -25,6 +27,10 @@ O backend segue uma arquitetura em camadas com portas e adaptadores (decisão de
 - **Domínio (`Consulta` / `StatusConsulta`):** concentra a máquina de estados do ciclo de vida da consulta.
 - **Gateways (G1, G2, G3) e Repository:** isolam a integração externa e a persistência.
 
+### Convenção de nomenclatura
+
+Todo o código e a API seguem o padrão **PascalCase** como convenção de nomenclatura. Isso vale para nomes de classes, métodos, rotas e campos expostos pela API, mantendo a consistência em todo o módulo (por exemplo: `ConsultaController`, `BuscarPorId`, `StatusConsulta`).
+
 ---
 
 ## Como rodar (ambiente Docker)
@@ -34,8 +40,8 @@ Pré-requisitos: **Docker** e **Docker Compose** instalados.
 1. Clone o repositório:
 
    ```bash
-   git clone <url-do-repositorio>
-   cd modulo-consultas-g4
+   git clone git@github.com:Darkalx3/modulo-consultas.git
+   cd modulo-consultas
    ```
 
 2. Crie um arquivo `.env` na raiz (use `.env.example` como base) com as variáveis de ambiente, por exemplo:
@@ -143,7 +149,9 @@ Content-Type: application/json
 
 ---
 
-## Organização de commits
+## Organização de commits e branches
+
+### Commits
 
 O projeto adota um padrão simples de mensagens de commit, com um prefixo indicando o tipo da alteração:
 
@@ -151,13 +159,31 @@ O projeto adota um padrão simples de mensagens de commit, com um prefixo indica
 - **`update`** — alteração ou melhoria de algo já existente.
 - **`fix`** — correção de bug ou de comportamento incorreto.
 
-Exemplos:
+Cada commit deve descrever de forma curta e objetiva o que foi alterado, no tempo presente. Exemplos:
 
 ```
 add: endpoint de agendamento de consulta
 update: validação de paciente no gateway do G1
 fix: liberação de horário ao cancelar consulta
 ```
+
+### Branches
+
+O repositório trabalha com **duas branches principais**:
+
+- **`developer`** — branch de desenvolvimento. É onde todo o trabalho do dia a dia acontece e onde as novas alterações são integradas primeiro. Os commits são feitos aqui (ou em branches de feature que partem da `developer` e voltam para ela).
+- **`main`** — branch estável, que representa o estado pronto/entregável do projeto. Não recebe commits diretos.
+
+### Processo de lançamento (PR para a `main`)
+
+Todo lançamento para a `main` deve seguir o processo padrão de **Pull Request (PR)**:
+
+1. As alterações são desenvolvidas e validadas na branch `developer`.
+2. Quando o conjunto de mudanças está pronto para ser lançado, abre-se um **PR de `developer` → `main`**.
+3. O PR é revisado por outro integrante do grupo antes de ser aprovado.
+4. Após a aprovação, o PR é mesclado (merge) na `main`.
+
+Dessa forma, a `main` se mantém sempre estável e nenhuma alteração chega a ela sem passar por revisão.
 
 ---
 
